@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cosense-code-clone</title>
+</head>
+<body>
+    <pre>Cosense上の[コードブロック]をクローンする
+[bsahd.icon]
+[* 公開projectの場合]
+最初はclone
+ $ deno run --allow-net=scrapbox.io:443 --allow-write=./scrapbox_temp --allow-read=./scrapbox_temp https://gist.github.com/bsahd/577338e6f09e92e718b99ba264c5c87f/raw/455c9c822c3a56c1e2a2997ed57bc8545577b37b/cosenseCodeClone.ts clone プロジェクト名
+  `./scrapbox_temp`にクローンされる
+     必ずアクセスは`./scrapbox_temp`のみの許可にしてください。そうでないとインジェクションによって重要なファイルが書き換えられることがあります。
+pull
+    変更のあるページのみ再作成する
+ $ deno run --allow-net=scrapbox.io:443 --allow-write=./scrapbox_temp --allow-read=./scrapbox_temp https://gist.github.com/bsahd/577338e6f09e92e718b99ba264c5c87f/raw/455c9c822c3a56c1e2a2997ed57bc8545577b37b/cosenseCodeClone.ts pull プロジェクト名
+ 更新が近い順ソート(標準)なので、modifiedが消えたら少し待って終了していいのかな
+ Cosenseから消えたページはファイル上には残る
+[-  また、Cosense上から消えたcodeblockも残る]
+[* 非公開projectの場合]
+    準備中です
+    export json dataをもとに生成できるようにしたい
+    Cosense export JSON Dataの型定義ってある？
+     https://jsr.io/@cosense/types/doc/rest/~/ExportedData [takker.icon]
+     私も調べてたw[bsahd.icon]
+[* 構造]
+ページ名に`/`が入る場合、ファイルシステム上では階層構造になる
+    日記ページがちゃんと階層化される
+    コードブロック名ではされない(エスケープされる)ので注意
+後は中で普通に`#include "../ページ名/コードブロック名"`すればいい
+`./scrapbox_temp/ページ名/コードブロック名`形式になる
+ページテキストは`./scrapbox_temp/ページ名/text.txt`にクローンされる
+    ページJSONは`./scrapbox_temp/ページ名/json.json`にクローンされる
+    ページHTMLは`./scrapbox_temp/ページ名/text.html`にクローンされる
+Windows環境の場合、ページ名から`: * ? " < > ? |`はパーセントエンコドされる
+    パーセントエンコードの為`%`もエンコードされる
+    `\ /`は自動的に階層にする
+    ファイル名の場合は`/`と
+書き込み失敗しても続きのページはしっかりとやる
+    `/`or`\`の前後に空白があると失敗する
+複数のページからリンクされてても本文がなければ(薄くなっているならHTMLは生成されません
+    空ページの一覧のAPIあるのかな
+だめだ。完全に静的サイトジェネレーターを目指してる
+    目次作る
+    頭文字ごとにアクセスできるようにする
+    1/2 hop linksだす
+        2 hopの重複が気になる
+[* メリット]
+    HTTP importに対応していない言語でも使える
+    お気に入りのpublic projectがローカルで読めるようになる</pre>
+</body>
+</html>
