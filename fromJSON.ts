@@ -1,5 +1,5 @@
-import * as parser from "jsr:@progfay/scrapbox-parser"; // MIT License
-import type * as cosenseTypes from "jsr:@cosense/types/rest"; // MIT License
+import * as parser from "@progfay/scrapbox-parser"; // MIT License
+import type * as cosenseTypes from "@cosense/types/rest"; // MIT License
 
 function hsc(unsafeText: string) {
   if (typeof unsafeText !== "string") {

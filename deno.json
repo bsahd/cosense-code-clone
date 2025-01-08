@@ -1,0 +1,11 @@
+{
+  "name": "@bsahd/cosense-code-clone",
+    "version": "0.1.0",
+    "license": "MIT",
+    "exports": "./mod.ts",
+  "imports": {
+    "@cosense/std": "jsr:@cosense/std@^0.29.3",
+    "@cosense/types": "jsr:@cosense/types@^0.10.4",
+    "@progfay/scrapbox-parser": "jsr:@progfay/scrapbox-parser@^9.2.0"
+  }
+}
