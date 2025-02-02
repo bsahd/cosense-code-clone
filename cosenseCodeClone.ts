@@ -281,7 +281,7 @@ export async function cloneFromAPI(
 						filestat &&
 						filestat / 1000 > pagei.updated
 					) {
-						throw new Error("");
+						return;
 					} else {
 						console.log("updated", pagename);
 						for await (
