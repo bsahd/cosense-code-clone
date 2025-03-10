@@ -1,6 +1,8 @@
 import * as parser from "@progfay/scrapbox-parser"; // MIT License
 import type * as cosenseTypes from "@cosense/types/rest"; // MIT License
 import * as cosenseStd from "@cosense/std"; // MIT License
+import ProgressBar from "@deno-library/progress"; // MIT License
+import { delay } from "@std/async"; // MIT License
 
 function hsc(unsafeText: string) {
   if (typeof unsafeText !== "string") {
@@ -211,6 +213,99 @@ async function generateIndexHTML(indexPages: string[]) {
 	`,
   );
 }
+
+async function getPage(pagei: cosenseTypes.BasePage, MODE: "clone" | "pull") {
+  const pagename = pagei.title;
+  try {
+    if(pagename.includes("../")){
+      console.log("pagename \""+pagename+"\" is danger!not clone this page.")
+    }
+    if (MODE == "pull") {
+      const fileexists = await fileExists(
+        `./${destination}/${sanitizeDirName(pagename)}/text.txt`,
+      );
+      if (fileexists) {
+        const filestat = (await Deno.stat(
+          `./${destination}/${sanitizeDirName(pagename)}/text.txt`,
+        )).mtime?.getTime();
+        if (
+          filestat &&
+          filestat / 1000 > pagei.updated
+        ) {
+          return;
+        } else {
+          console.log("updated", pagename);
+          for await (
+            const entry of Deno.readDir(
+              `./${destination}/${sanitizeDirName(pagename)}/`,
+            )
+          ) {
+            if (entry.isFile) {
+              Deno.remove(
+                `./${destination}/${sanitizeDirName(pagename)}/${entry.name}`,
+              );
+            }
+          }
+        }
+      }
+    }
+    await Deno.mkdir(
+      `./${destination}/${sanitizeDirName(pagename)}`,
+      { recursive: true },
+    );
+    const page: cosenseTypes.Page = await (await fetch(
+      `https://scrapbox.io/api/pages/${PROJECT_NAME}/${
+        encodeURIComponent(pagename)
+      }`,
+    )).json();
+    const pagetext = page.lines.map((a) => a.text).join("\n");
+    const pageparse = parser.parse(
+      pagetext,
+    );
+    await Deno.writeTextFile(
+      `./${destination}/${sanitizeDirName(pagename)}/text.txt`,
+      pagetext,
+    );
+    await Deno.writeTextFile(
+      `./${destination}/${sanitizeDirName(pagename)}/text.html`,
+      generateHTML(
+        pageparse,
+        pagename.split("/").length,
+        page.relatedPages,
+      ),
+    );
+    await Deno.writeTextFile(
+      `./${destination}/${sanitizeDirName(pagename)}/json.json`,
+      JSON.stringify(page),
+    );
+    for (const element of pageparse) {
+      if (element.type == "codeBlock") {
+        try {
+          await Deno.writeTextFile(
+            `./${destination}/${sanitizeDirName(pagename)}/${
+              sanitizeFileName(element.fileName)
+            }`,
+            element.content,
+          );
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function fileExists(filepath: string | URL): Promise<boolean> {
+  try {
+    await Deno.stat(filepath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 let PROJECT_NAME = "";
 let destination = "";
 export async function cloneFromAPI(
@@ -224,14 +319,6 @@ export async function cloneFromAPI(
     `https://scrapbox.io/api/pages/${PROJECT_NAME}/?limit=10`,
   )).json() as cosenseTypes.PageList).count;
 
-  async function fileExists(filepath: string | URL): Promise<boolean> {
-    try {
-      await Deno.stat(filepath);
-      return true;
-    } catch {
-      return false;
-    }
-  }
   if (await fileExists(`./${destination}`) && MODE == "clone") {
     await Deno.remove(
       `./${destination}`,
@@ -250,102 +337,35 @@ export async function cloneFromAPI(
   );
   const indexPages: string[] = [];
   const PARALLEL = 16;
-
-  for (const skipnum of arrayRange(0, pageCount, PARALLEL)) {
+  
+  const pagelist: cosenseTypes.BasePage[] = [];
+  let progress = new ProgressBar({ title: "fetching page list:", total: pageCount });
+  for (const skipnum of arrayRange(0, pageCount, 1000)) {
     const pglistw = await cosenseStd.listPages(PROJECT_NAME, {
       skip: skipnum,
-      limit: PARALLEL,
+      limit: 1000,
       sort: "updated",
     });
     if (!pglistw.ok) {
       continue;
     }
-    const pglist = pglistw.val;
-    indexPages.push(...pglist.pages.map((a) => a.title));
-    await generateIndexHTML(indexPages);
-    console.log(
-      `${skipnum}/${pageCount}`,
-    );
-    await Promise.all(pglist.pages.map(async (pagei) => {
-      const pagename = pagei.title;
-      try {
-        if (MODE == "pull") {
-          const fileexists = await fileExists(
-            `./${destination}/${sanitizeDirName(pagename)}/text.txt`,
-          );
-          if (fileexists) {
-            const filestat = (await Deno.stat(
-              `./${destination}/${sanitizeDirName(pagename)}/text.txt`,
-            )).mtime?.getTime();
-            if (
-              filestat &&
-              filestat / 1000 > pagei.updated
-            ) {
-              return;
-            } else {
-              console.log("updated", pagename);
-              for await (
-                const entry of Deno.readDir(
-                  `./${destination}/${sanitizeDirName(pagename)}/`,
-                )
-              ) {
-                if (entry.isFile) {
-                  Deno.remove(
-                    `./${destination}/${
-                      sanitizeDirName(pagename)
-                    }/${entry.name}`,
-                  );
-                }
-              }
-            }
-          }
-        }
-        await Deno.mkdir(
-          `./${destination}/${sanitizeDirName(pagename)}`,
-          { recursive: true },
-        );
-        const page: cosenseTypes.Page = await (await fetch(
-          `https://scrapbox.io/api/pages/${PROJECT_NAME}/${
-            encodeURIComponent(pagename)
-          }`,
-        )).json();
-        const pagetext = page.lines.map((a) => a.text).join("\n");
-        const pageparse = parser.parse(
-          pagetext,
-        );
-        await Deno.writeTextFile(
-          `./${destination}/${sanitizeDirName(pagename)}/text.txt`,
-          pagetext,
-        );
-        await Deno.writeTextFile(
-          `./${destination}/${sanitizeDirName(pagename)}/text.html`,
-          generateHTML(
-            pageparse,
-            pagename.split("/").length,
-            page.relatedPages,
-          ),
-        );
-        await Deno.writeTextFile(
-          `./${destination}/${sanitizeDirName(pagename)}/json.json`,
-          JSON.stringify(page),
-        );
-        for (const element of pageparse) {
-          if (element.type == "codeBlock") {
-            try {
-              await Deno.writeTextFile(
-                `./${destination}/${sanitizeDirName(pagename)}/${
-                  sanitizeFileName(element.fileName)
-                }`,
-                element.content,
-              );
-            } catch (e) {
-              console.error(e);
-            }
-          }
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }));
+    progress.render(skipnum)
+    pagelist.push(...pglistw.val.pages);
+  }
+  indexPages.push(...pagelist.map((a) => a.title));
+  progress = new ProgressBar({ title: "Cloning:", total: pageCount });
+  await generateIndexHTML(indexPages);
+  let connections = 0;
+  let getted = 0;
+  for (const item of pagelist) {
+    while (connections > PARALLEL) {
+      await delay(50);
+    }
+    await progress.render(getted);
+    connections++;
+    getPage(item, MODE).then(() => {
+      getted++;
+      connections--;
+    });
   }
 }
