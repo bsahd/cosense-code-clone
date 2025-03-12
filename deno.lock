@@ -1,11 +1,12 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@bsahd/libcosense@0.2": "0.2.0",
+    "jsr:@bsahd/libcosense@1": "1.0.0",
     "jsr:@cliffy/command@1.0.0-rc.7": "1.0.0-rc.7",
     "jsr:@cliffy/flags@1.0.0-rc.7": "1.0.0-rc.7",
     "jsr:@cliffy/internal@1.0.0-rc.7": "1.0.0-rc.7",
     "jsr:@cliffy/table@1.0.0-rc.7": "1.0.0-rc.7",
+    "jsr:@cosense/types@~0.10.4": "0.10.7",
     "jsr:@deno-library/progress@^1.5.1": "1.5.1",
     "jsr:@progfay/scrapbox-parser@^9.2.0": "9.2.0",
     "jsr:@std/async@^1.0.11": "1.0.11",
@@ -15,8 +16,8 @@
     "jsr:@std/text@~1.0.7": "1.0.11"
   },
   "jsr": {
-    "@bsahd/libcosense@0.2.0": {
-      "integrity": "b0a2a7479bcdb2d1b66174ca194573882e7533e6a5e8af89ccc977ff4c6b570e"
+    "@bsahd/libcosense@1.0.0": {
+      "integrity": "edabd54ba1a347a73bff2a4f42061c33fe8d9a2dc63410be73502dfe936cbb35"
     },
     "@cliffy/command@1.0.0-rc.7": {
       "integrity": "1288808d7a3cd18b86c24c2f920e47a6d954b7e23cadc35c8cbd78f8be41f0cd",
@@ -42,6 +43,9 @@
       "dependencies": [
         "jsr:@std/fmt@~1.0.2"
       ]
+    },
+    "@cosense/types@0.10.7": {
+      "integrity": "ce62b4cc7dc599f0f55abc5f4b88d6fe3f5aa7fbacdc46cc1ff32a62fea60176"
     },
     "@deno-library/progress@1.5.1": {
       "integrity": "966611826b8bb27baae73ab1c4fa4317cd4edd2abb99750cd6f8488d22d5b121",
@@ -71,7 +75,7 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@bsahd/libcosense@0.2",
+      "jsr:@bsahd/libcosense@1",
       "jsr:@cosense/types@~0.10.4",
       "jsr:@deno-library/progress@^1.5.1",
       "jsr:@progfay/scrapbox-parser@^9.2.0",
