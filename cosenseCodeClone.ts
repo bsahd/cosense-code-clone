@@ -36,7 +36,7 @@ function sanitizeFileName(name: string) {
   }
 }
 
-async function getPage(page: libcosense.Page, MODE: "clone" | "pull") {
+async function getPage(page: libcosense.PageListItem, MODE: "clone" | "pull") {
   const pagename = page.title;
   try {
     if(pagename.includes("../")){
@@ -75,7 +75,8 @@ async function getPage(page: libcosense.Page, MODE: "clone" | "pull") {
       `./${destination}/${sanitizeDirName(pagename)}`,
       { recursive: true },
     );
-    const pagetext = page.lines.map((a) => a.text).join("\n");
+    const page2 = await page.getDetail()
+    const pagetext = page2.lines.map((a) => a.text).join("\n");
     const pageparse = parser.parse(
       pagetext,
     );
@@ -159,7 +160,7 @@ export async function cloneFromAPI(
     }
     await progress.render(getted);
     connections++;
-    getPage(await item.getDetail(), MODE).then(() => {
+    getPage(item, MODE).then(() => {
       getted++;
       connections--;
     });
