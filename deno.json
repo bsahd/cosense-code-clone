@@ -4,7 +4,7 @@
   "license": "MIT",
   "exports": "./mod.ts",
   "imports": {
-    "@cosense/std": "jsr:@cosense/std@^0.29.3",
+    "@bsahd/libcosense": "jsr:@bsahd/libcosense@^0.1.2",
     "@cosense/types": "jsr:@cosense/types@^0.10.4",
     "@deno-library/progress": "jsr:@deno-library/progress@^1.5.1",
     "@progfay/scrapbox-parser": "jsr:@progfay/scrapbox-parser@^9.2.0",
