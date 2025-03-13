@@ -1,8 +1,8 @@
 import * as parser from "@progfay/scrapbox-parser"
 import type * as cosenseTypes from "@cosense/types/rest"; // MIT License
 import * as libcosense from "@bsahd/libcosense"; // MIT License
-import ProgressBar from "@deno-library/progress"; // MIT License
 import { delay } from "@std/async"; // MIT License
+import * as cliProgress from "cli-progress"; // MIT License
 
 
 function sanitizeDirName(name: string) {
@@ -56,7 +56,6 @@ async function getPage(page: libcosense.PageListItem, MODE: "clone" | "pull") {
         ) {
           return;
         } else {
-          console.log("updated", pagename);
           for await (
             const entry of Deno.readDir(
               `./${destination}/${sanitizeDirName(pagename)}/`,
@@ -125,9 +124,7 @@ export async function cloneFromAPI(
 ) {
   PROJECT_NAME = PROJECT_NAME_;
   destination = destination_;
-  const pageCount = (await (await fetch(
-    `https://scrapbox.io/api/pages/${PROJECT_NAME}/?limit=10`,
-  )).json() as cosenseTypes.PageList).count;
+  console.log("start: "+PROJECT_NAME)
 
   if (await fileExists(`./${destination}`) && MODE == "clone") {
     await Deno.remove(
@@ -141,28 +138,32 @@ export async function cloneFromAPI(
       `./${destination}`,
     );
   }
-  await Deno.writeTextFile(
-    `./${destination}/index.html`,
-    "",
-  );
-  const indexPages: string[] = [];
   const PARALLEL = 16;
+  const startTime = Date.now()
   
-  const pagelist: cosenseTypes.BasePage[] = [];
   const pj = await libcosense.Project.new(PROJECT_NAME,{})
-  indexPages.push(...pagelist.map((a) => a.title));
-  const progress = new ProgressBar({ title: "Cloning:", total: pageCount });
+  const progress = new cliProgress.SingleBar({etaBuffer:512,fps:undefined},cliProgress.Presets.rect);
+  progress.start(1,0)
+  const pageCount = (await (await fetch(
+    `https://scrapbox.io/api/pages/${PROJECT_NAME}/?limit=10`,
+  )).json() as cosenseTypes.PageList).count;
+  progress.setTotal(pageCount)
   let connections = 0;
   let getted = 0;
   for await (const item of pj.pageList()) {
     while (connections > PARALLEL) {
-      await delay(50);
+      await delay(10);
     }
-    await progress.render(getted);
+    progress.update(getted);
     connections++;
     getPage(item, MODE).then(() => {
       getted++;
       connections--;
     });
   }
+  while (connections > 0) {
+    await delay(10);
+  }
+  progress.stop()
+  console.log("done in "+(Date.now() - startTime)/1000+"s: "+PROJECT_NAME)
 }

@@ -1,6 +1,6 @@
 {
   "name": "@bsahd/cosense-code-clone",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "exports": "./mod.ts",
   "imports": {
@@ -8,6 +8,8 @@
     "@cosense/types": "jsr:@cosense/types@^0.10.4",
     "@deno-library/progress": "jsr:@deno-library/progress@^1.5.1",
     "@progfay/scrapbox-parser": "jsr:@progfay/scrapbox-parser@^9.2.0",
-    "@std/async": "jsr:@std/async@^1.0.11"
+    "@std/async": "jsr:@std/async@^1.0.11",
+    "@types/cli-progress": "npm:@types/cli-progress@^3.11.6",
+    "cli-progress": "npm:cli-progress@^3.12.0"
   }
 }
