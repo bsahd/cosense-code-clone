@@ -149,7 +149,7 @@ export async function cloneFromAPI(
   const PARALLEL = 16;
   
   const pagelist: cosenseTypes.BasePage[] = [];
-  const pj = await libcosense.Project.new(PROJECT_NAME)
+  const pj = await libcosense.Project.new(PROJECT_NAME,{})
   indexPages.push(...pagelist.map((a) => a.title));
   const progress = new ProgressBar({ title: "Cloning:", total: pageCount });
   let connections = 0;
