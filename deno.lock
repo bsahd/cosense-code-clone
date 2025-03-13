@@ -1,7 +1,7 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@bsahd/libcosense@1": "1.0.0",
+    "jsr:@bsahd/libcosense@^1.2.0": "1.2.0",
     "jsr:@cliffy/command@1.0.0-rc.7": "1.0.0-rc.7",
     "jsr:@cliffy/flags@1.0.0-rc.7": "1.0.0-rc.7",
     "jsr:@cliffy/internal@1.0.0-rc.7": "1.0.0-rc.7",
@@ -16,8 +16,8 @@
     "jsr:@std/text@~1.0.7": "1.0.11"
   },
   "jsr": {
-    "@bsahd/libcosense@1.0.0": {
-      "integrity": "edabd54ba1a347a73bff2a4f42061c33fe8d9a2dc63410be73502dfe936cbb35"
+    "@bsahd/libcosense@1.2.0": {
+      "integrity": "025cf60fbf4850aa51b825d833a67ecc1d37cfdc15e59c2650c52ffc7e53c934"
     },
     "@cliffy/command@1.0.0-rc.7": {
       "integrity": "1288808d7a3cd18b86c24c2f920e47a6d954b7e23cadc35c8cbd78f8be41f0cd",
@@ -75,7 +75,7 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@bsahd/libcosense@1",
+      "jsr:@bsahd/libcosense@^1.2.0",
       "jsr:@cosense/types@~0.10.4",
       "jsr:@deno-library/progress@^1.5.1",
       "jsr:@progfay/scrapbox-parser@^9.2.0",
