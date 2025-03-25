@@ -140,8 +140,7 @@ export async function cloneFromAPI(
   }
   const PARALLEL = 16;
   const startTime = Date.now()
-  
-  const pj = await libcosense.Project.new(PROJECT_NAME,{})
+  const pj = await new libcosense.CosenseClient({sessionid:Deno.env.get("COSENSESID")}).getProject(PROJECT_NAME)
   const progress = new cliProgress.SingleBar({etaBuffer:512,fps:undefined},cliProgress.Presets.rect);
   progress.start(1,0)
   const pageCount = (await (await fetch(

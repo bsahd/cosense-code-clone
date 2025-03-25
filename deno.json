@@ -1,10 +1,10 @@
 {
   "name": "@bsahd/cosense-code-clone",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "license": "MIT",
   "exports": "./mod.ts",
   "imports": {
-    "@bsahd/libcosense": "jsr:@bsahd/libcosense@^1.2.1",
+    "@bsahd/libcosense": "jsr:@bsahd/libcosense@^2.0.0",
     "@cosense/types": "jsr:@cosense/types@^0.10.4",
     "@deno-library/progress": "jsr:@deno-library/progress@^1.5.1",
     "@progfay/scrapbox-parser": "jsr:@progfay/scrapbox-parser@^9.2.0",
