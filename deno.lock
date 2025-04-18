@@ -1,26 +1,25 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@bsahd/libcosense@2": "2.0.0",
+    "jsr:@bsahd/libcosense@^2.0.2": "2.0.2",
     "jsr:@cliffy/command@1.0.0-rc.7": "1.0.0-rc.7",
     "jsr:@cliffy/flags@1.0.0-rc.7": "1.0.0-rc.7",
     "jsr:@cliffy/internal@1.0.0-rc.7": "1.0.0-rc.7",
     "jsr:@cliffy/table@1.0.0-rc.7": "1.0.0-rc.7",
-    "jsr:@cosense/types@~0.10.4": "0.10.7",
+    "jsr:@cosense/types@~0.10.4": "0.10.8",
     "jsr:@deno-library/progress@^1.5.1": "1.5.1",
     "jsr:@progfay/scrapbox-parser@^9.2.0": "9.2.0",
-    "jsr:@std/async@^1.0.11": "1.0.11",
+    "jsr:@std/async@^1.0.11": "1.0.12",
     "jsr:@std/fmt@1.0.3": "1.0.3",
-    "jsr:@std/fmt@~1.0.2": "1.0.6",
+    "jsr:@std/fmt@~1.0.2": "1.0.3",
     "jsr:@std/io@0.225.0": "0.225.0",
-    "jsr:@std/text@~1.0.7": "1.0.11",
+    "jsr:@std/text@~1.0.7": "1.0.12",
     "npm:@types/cli-progress@^3.11.6": "3.11.6",
-    "npm:cli-progress@*": "3.12.0",
     "npm:cli-progress@^3.12.0": "3.12.0"
   },
   "jsr": {
-    "@bsahd/libcosense@2.0.0": {
-      "integrity": "9b76eb295e8ca8c66bc144ac0c00ee2a6854f3df25ad63bd1404b3b542c08965"
+    "@bsahd/libcosense@2.0.2": {
+      "integrity": "aaee301d88f07c045ba24b13a19d39c29625875b4e772214fcc9d5945cc06a1d"
     },
     "@cliffy/command@1.0.0-rc.7": {
       "integrity": "1288808d7a3cd18b86c24c2f920e47a6d954b7e23cadc35c8cbd78f8be41f0cd",
@@ -47,8 +46,8 @@
         "jsr:@std/fmt@~1.0.2"
       ]
     },
-    "@cosense/types@0.10.7": {
-      "integrity": "ce62b4cc7dc599f0f55abc5f4b88d6fe3f5aa7fbacdc46cc1ff32a62fea60176"
+    "@cosense/types@0.10.8": {
+      "integrity": "f946efbd89459ae7bd888d589151b0020e557aabc152710db645337769d54981"
     },
     "@deno-library/progress@1.5.1": {
       "integrity": "966611826b8bb27baae73ab1c4fa4317cd4edd2abb99750cd6f8488d22d5b121",
@@ -60,20 +59,17 @@
     "@progfay/scrapbox-parser@9.2.0": {
       "integrity": "82ebb95e72dd0ea44547fd48e2bcb479fd2275fc26c4515598f742e5aaf6e0e5"
     },
-    "@std/async@1.0.11": {
-      "integrity": "eee0d3405275506638a9c8efaa849cf0d35873120c69b7caa1309c9a9e5b6f85"
+    "@std/async@1.0.12": {
+      "integrity": "d1bfcec459e8012846fe4e38dfc4241ab23240ecda3d8d6dfcf6d81a632e803d"
     },
     "@std/fmt@1.0.3": {
       "integrity": "97765c16aa32245ff4e2204ecf7d8562496a3cb8592340a80e7e554e0bb9149f"
     },
-    "@std/fmt@1.0.6": {
-      "integrity": "a2c56a69a2369876ddb3ad6a500bb6501b5bad47bb3ea16bfb0c18974d2661fc"
-    },
     "@std/io@0.225.0": {
       "integrity": "c1db7c5e5a231629b32d64b9a53139445b2ca640d828c26bf23e1c55f8c079b3"
     },
-    "@std/text@1.0.11": {
-      "integrity": "f191fa22590cac8b1cdba6cc4ab97940e720f7cc67b3084e54405b428bf5843d"
+    "@std/text@1.0.12": {
+      "integrity": "921132a41e03a2363f76ee5afe83c90a6271596aa95c137494edcb3404a564a5"
     }
   },
   "npm": {
@@ -124,7 +120,7 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@bsahd/libcosense@2",
+      "jsr:@bsahd/libcosense@^2.0.2",
       "jsr:@cosense/types@~0.10.4",
       "jsr:@deno-library/progress@^1.5.1",
       "jsr:@progfay/scrapbox-parser@^9.2.0",
