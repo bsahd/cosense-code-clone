@@ -1,7 +1,7 @@
 import { Command } from "jsr:@cliffy/command@1.0.0-rc.7";
 import { cloneFromAPI } from "./cosenseCodeClone.ts";
 import { cloneFromJSON } from "./fromJSON.ts";
-export {cloneFromAPI, cloneFromJSON}
+export { cloneFromAPI, cloneFromJSON };
 if (import.meta.main) {
   const clone = new Command()
     .arguments("<projectName:string> [destination:string]")

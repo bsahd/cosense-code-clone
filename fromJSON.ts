@@ -246,9 +246,11 @@ export async function cloneFromJSON(
     );
     try {
       const pagename = page.title;
-      if(pagename.includes("../")){
-        console.log("pagename \""+pagename+"\" is danger!not clone this page.")
-      }  
+      if (pagename.includes("../")) {
+        console.log(
+          'pagename "' + pagename + '" is danger!not clone this page.',
+        );
+      }
       await Deno.mkdir(
         `./${destination}/${sanitizeDirName(pagename)}`,
         { recursive: true },

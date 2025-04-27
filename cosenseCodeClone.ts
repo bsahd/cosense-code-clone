@@ -1,9 +1,8 @@
-import * as parser from "@progfay/scrapbox-parser"
+import * as parser from "@progfay/scrapbox-parser";
 import type * as cosenseTypes from "@cosense/types/rest"; // MIT License
 import * as libcosense from "@bsahd/libcosense"; // MIT License
 import { delay } from "@std/async"; // MIT License
 import * as cliProgress from "cli-progress"; // MIT License
-
 
 function sanitizeDirName(name: string) {
   // Windowsで使えない文字を考慮
@@ -39,8 +38,8 @@ function sanitizeFileName(name: string) {
 async function getPage(page: libcosense.PageListItem, MODE: "clone" | "pull") {
   const pagename = page.title;
   try {
-    if(pagename.includes("../")){
-      console.log("pagename \""+pagename+"\" is danger!not clone this page.")
+    if (pagename.includes("../")) {
+      console.log('pagename "' + pagename + '" is danger!not clone this page.');
     }
     if (MODE == "pull") {
       const fileexists = await fileExists(
@@ -74,7 +73,7 @@ async function getPage(page: libcosense.PageListItem, MODE: "clone" | "pull") {
       `./${destination}/${sanitizeDirName(pagename)}`,
       { recursive: true },
     );
-    const page2 = await page.getDetail()
+    const page2 = await page.getDetail();
     const pagetext = page2.lines.map((a) => a.text).join("\n");
     const pageparse = parser.parse(
       pagetext,
@@ -85,7 +84,21 @@ async function getPage(page: libcosense.PageListItem, MODE: "clone" | "pull") {
     );
     await Deno.writeTextFile(
       `./${destination}/${sanitizeDirName(pagename)}/json.json`,
-      JSON.stringify({...page2,project:undefined}),
+      JSON.stringify({
+        ...page2,
+        project: undefined,
+        relatedPages: {
+          links1hop: page2.relatedPages.links1hop.map((e) => ({
+            ...e,
+            page: null,
+          })),
+          links2hop: page2.relatedPages.links2hop.map((e) => ({
+            ...e,
+            page: null,
+          })),
+          hasBackLinksOrIcons: page2.relatedPages.hasBackLinksOrIcons,
+        },
+      }),
     );
     for (const element of pageparse) {
       if (element.type == "codeBlock") {
@@ -124,7 +137,7 @@ export async function cloneFromAPI(
 ) {
   PROJECT_NAME = PROJECT_NAME_;
   destination = destination_;
-  console.log("start: "+PROJECT_NAME)
+  console.log("start: " + PROJECT_NAME);
 
   if (await fileExists(`./${destination}`) && MODE == "clone") {
     await Deno.remove(
@@ -139,14 +152,19 @@ export async function cloneFromAPI(
     );
   }
   const PARALLEL = 16;
-  const startTime = Date.now()
-  const pj = await new libcosense.CosenseClient({sessionid:Deno.env.get("COSENSESID")}).getProject(PROJECT_NAME)
-  const progress = new cliProgress.SingleBar({etaBuffer:512,fps:undefined},cliProgress.Presets.rect);
-  progress.start(1,0)
+  const startTime = Date.now();
+  const pj = await new libcosense.CosenseClient({
+    sessionid: Deno.env.get("COSENSESID"),
+  }).getProject(PROJECT_NAME);
+  const progress = new cliProgress.SingleBar(
+    { etaBuffer: 512, fps: undefined },
+    cliProgress.Presets.rect,
+  );
+  progress.start(1, 0);
   const pageCount = (await (await fetch(
     `https://scrapbox.io/api/pages/${PROJECT_NAME}/?limit=10`,
   )).json() as cosenseTypes.PageList).count;
-  progress.setTotal(pageCount)
+  progress.setTotal(pageCount);
   let connections = 0;
   let getted = 0;
   for await (const item of pj.pageList()) {
@@ -163,6 +181,8 @@ export async function cloneFromAPI(
   while (connections > 0) {
     await delay(10);
   }
-  progress.stop()
-  console.log("done in "+(Date.now() - startTime)/1000+"s: "+PROJECT_NAME)
+  progress.stop();
+  console.log(
+    "done in " + (Date.now() - startTime) / 1000 + "s: " + PROJECT_NAME,
+  );
 }
