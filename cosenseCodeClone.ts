@@ -85,7 +85,7 @@ async function getPage(page: libcosense.PageListItem, MODE: "clone" | "pull") {
     );
     await Deno.writeTextFile(
       `./${destination}/${sanitizeDirName(pagename)}/json.json`,
-      JSON.stringify(page),
+      JSON.stringify({...page2,project:undefined}),
     );
     for (const element of pageparse) {
       if (element.type == "codeBlock") {
